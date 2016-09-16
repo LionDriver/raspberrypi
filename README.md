@@ -2,12 +2,12 @@
 Commonly used raspberry pi scripts I've created
 
 #ipdisplay.py
-Display your current IP address full screen upon boot, be sure to update the screen geometry to fit your screen (defaults to 800x480 for a common 5" display)
+Display your current IP address full screen upon boot, be sure to update the screen geometry in the ipdisplay.py to fit your screen (defaults to 800x480 for a common 5" display)
 
 
 ## Requirments:
 Raspberry pi running raspbian with latest updates (only has been tested on rpi 3 b)  
-TKinter python library
+TKinter python library (sudo apt-get update && sudo apt-get install python-tk)
 
 
 ## Install:
