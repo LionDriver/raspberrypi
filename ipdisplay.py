@@ -1,10 +1,5 @@
 #!/usr/bin/python
-#Set this to run once the raspbian LXDE desktop loads
-#Don't forget to: export DISPLAY=:0
-#This can be set to run in .profile or .bashrc with a line like this:
-#export DISPLAY=:0
-#python $HOME/ipdisplay.py &
-
+# ipdisplay.py - A simple script to display current IP in GUI
 
 from Tkinter import *
 import tkMessageBox as mbox
@@ -23,12 +18,16 @@ def get_ip_address(ifname):
 myip = get_ip_address('eth0')
 
 root = Tk()
-label = Label(root, fg="red", bg='black', text=myip, width=800, font=("Helvetica", 64))
+root.wm_title('IP Display')
+
+#Change width to match display
+label = Label(root, fg="red", bg='black', text=myip, width=800, font=('Helvetica', 64))
 label.pack()
 label.focus_set()
 
-button = Button(root, width=100, text="OK", command=quit)
+button = Button(root, width=100, text='OK', command=quit)
 button.pack()
 
-root.geometry("800x480")
+#Change geometry to match display
+root.geometry('800x480')
 root.mainloop()
