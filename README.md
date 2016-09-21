@@ -22,10 +22,6 @@ Terminal=false
 Hidden=false  
 X-GNOME-Autostart-enabled=true  
 Comment=Display IP on start up  
-  
-  
-Also you may need to add in the following to your .profile or .bashrc file in your home directory depending on how you want to handle it:  
-export DISPLAY=:0
 
 
 
