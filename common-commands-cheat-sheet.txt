@@ -1,0 +1,161 @@
+
+# Good Internet Radio Streams
+
+# Sleep Streams
+http://sc13.shoutcaststreaming.us:8194
+
+# Electronic, ambient, and chill Streams
+http://stillstream.fm/listen.pls
+http://chill.friskyradio.com/friskychill_mp3_high
+http://stream.friskyradio.com:8000/frisky_mp3_hi
+http://ice1.somafm.com/thetrip-128-mp3
+http://ice1.somafm.com/spacestation-128-aac
+http://ice1.somafm.com/deepspaceone-128-mp3
+http://ice1.somafm.com/dronezone-128-mp3
+http://prodigy.stillstream.fm:8000/stillstream
+http://81.219.54.6:8004
+http://fallout.fm:8000/falloutfm5.ogg
+http://fallout.fm:8000/falloutfm4.ogg
+http://fallout.fm:8000/falloutfm3.ogg
+http://fallout.fm:8000/falloutfm2.ogg
+http://proxy.calmradio.com:3128/stream
+
+# Radio Dismuke
+http://74.208.197.50:8087      
+
+
+----------------------------------------------------------------------------------------
+# RPI wifi and bluetooth
+
+# Disable wifi and bluetooth
+sudo nano /etc/modprobe.d/raspi-blacklist.conf  (create file if not there)
+
+add the following lines:
+#wifi
+blacklist brcmfmac
+blacklist brcmutil
+#bt
+blacklist btbcm
+blacklist hci_uart
+
+# Scan wifi:
+sudo iwlist wlan0 scan
+
+# Connect to wifi:
+sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+Add the following for each network:
+network={
+    ssid="testing"
+    psk="testingPassword"
+}
+
+wpa_cli -i wlan0 reconfigure
+
+# Get the wifi uptime
+watch -n 60 uptime    
+
+# turn off wifi?
+ifconfig wlan0 down
+
+# turn off radio power (may not be correct)
+iwconfig wlan0 txpower off
+
+# turn off wifi interface  (may not be correct)
+ifconfig wlan0 disable
+
+# turn ethernet back on
+ifconfig eth0 enable
+
+# Scan and connect bluetooth
+sudo bluetoothctl
+Type scan on and press enter one more time. The unique addresses of all the Bluetooth devices around the Raspberry Pi will appear and look something like an alphanumeric XX:XX:XX:XX:XX:XX. If you make the device you want to pair discoverable (or put it into pairing mode), the device nickname may appear to the right of the address. If not, you will have to do a little trial and error or waiting to find the correct device.
+To pair the device, type pair [device Bluetooth address]. The command will look something like pair XX:XX:XX:XX:XX:XX. You may need to also do connect XX:XX:XX:XX:XX:XX
+
+----------------------------------------------------------------------------------------
+# Common Bash commands/apps
+
+# list number files in dir:
+ls -1 | wc -l
+
+# See latest logins
+last -a
+
+# Look for failed ssh
+cat /var/log/auth.log | grep 'sshd.*Failed'
+
+# List all users
+cut -d: -f1 /etc/passwd
+
+# List user groups
+cut -d: -f1 /etc/group
+
+# Get external ip
+curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//' 
+
+# Lifo get batt level
+lifepo4wered-cli get vbat
+
+# Turn off hdmi
+/opt/vc/bin/tvservice -off
+
+# Get cpu temp
+cat /sys/class/thermal/thermal_zone0/temp
+
+# Check noip status
+/usr/local/bin/noip2 -C
+
+# Bash for loop to see what is on 192.168.1.1-254
+for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip>/dev/null; [ $? -eq 0 ] && echo "192.168.1.$ip UP" || : ; done
+
+# List open ports
+sudo netstat -lntu
+
+
+----------------------------------------------------------------------------------------
+# Audio:
+
+# Add usb audio
+sudo nano /etc/asound.conf 
+
+pcm.!default  {
+ type hw card 1
+}
+ctl.!default {
+ type hw card 1
+}
+
+# Test audio
+speaker-test -c2 --test=wav -w /usr/share/sounds/alsa/Front_Center.wav
+
+# Stream internet radio
+mpg123 http://ice1.somafm.com/u80s-128-mp3
+
+# Mixer and volume control
+alsamixer -c 1
+
+out = `/usr/bin/arecord -D plughw:#{HWDEVICE},0 -d #{SAMPLE_DURATION} -f #{FORMAT} 2>/dev/null | /usr/bin/sox -t .wav - -n stat 2>&1`
+
+sudo arecord --device=hw:1,0 --format S16_LE -d 5 2>/dev/null | /usr/bin/sox -t .wav - -n stat
+
+sudo arecord --device=hw:1,0 --format S16_LE --rate 441000 -c1 sweep.wav
+----------------------------------------------------------------------------------------
+#mysql command cheats
+
+#MYSQL:
+mysql -u root -p
+desc tempdat;
+use cputemps;
+truncate table tempdat;  #remove all data, but don't delete
+DROP TABLE tempdat;  #delete table
+CREATE TABLE imgdat( imgId INT PRIMARY KEY AUTO_INCREMENT, imgUrl TEXT NOT NULL, imgDate DATETIME NOT NULL );
+INSERT INTO imgdat (imgUrl, imgDate) VALUES ('2017-05-11_132539.jpg', NOW());
+CREATE TABLE tempdat (tdate DATE, ttime TIME, zone TEXT, temperature NUMERIC);
+CREATE TABLE tempdat( tmp_id MEDIUMINT NOT NULL AUTO_INCREMENT, tmp_date DATE, tmp_time TIME, tmp FLOAT, PRIMARY KEY ( tmp_id );
+CREATE TABLE tempdat ( id MEDIUMINT NOT NULL AUTO_INCREMENT, date DATE, time TIME, temp FLOAT NOT NULL, PRIMARY KEY(id));
+GRANT ALL PRIVILEGES ON images.* TO 'monitor'@'localhost';
+FLUSH PRIVILEGES;
+select DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'tempdat';
+show create table tempdat;
+DELETE from tempdat where date = '2017-04-30';
+SELECT * FROM tempdat;
+DELETE FROM tempdat WHERE date < (NOW() - INTERVAL 1 DAY);
