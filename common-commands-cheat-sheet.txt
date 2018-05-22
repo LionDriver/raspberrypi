@@ -21,7 +21,21 @@ http://fallout.fm:8000/falloutfm2.ogg
 http://proxy.calmradio.com:3128/stream
 
 # Radio Dismuke
-http://74.208.197.50:8087      
+http://74.208.197.50:8087
+
+# BBC streams
+http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p?s   #BBC Radio 1
+http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio2_mf_p?s   #BBC Radio 2
+http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio3_mf_p?s   #BBC Radio 3
+http://open.live.bbc.co.uk/mediaselector/5/redir/version/2.0/mediaset/http-icy-mp3-a-stream/proto/http/vpid/bbc_radio_five_live   #BBC Radio 5 Live
+http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p?s       #BBC Radio 6
+http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1xtra_mf_p?s   #BBC Radio 1 extra
+http://bbcmedia.ic.llnwd.net/stream/bbcmedia_lrbris_mf_p?s       #BBC Radio Bristol
+http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4extra_mf_q?s  #BBC Radio 4 extra
+http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk          #BBC World service
+
+# PsyTrance
+http://81.88.36.42:8030/ 
 
 
 ----------------------------------------------------------------------------------------
