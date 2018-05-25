@@ -14,14 +14,15 @@ http://ice1.somafm.com/deepspaceone-128-mp3
 http://ice1.somafm.com/dronezone-128-mp3
 http://prodigy.stillstream.fm:8000/stillstream
 http://81.219.54.6:8004
+http://proxy.calmradio.com:3128/stream
+
+# Oldies
+http://74.208.197.50:8087 #Radio Dismuke
+http://144.217.180.30:8022 #Radio Addictive 50s
 http://fallout.fm:8000/falloutfm5.ogg
 http://fallout.fm:8000/falloutfm4.ogg
 http://fallout.fm:8000/falloutfm3.ogg
 http://fallout.fm:8000/falloutfm2.ogg
-http://proxy.calmradio.com:3128/stream
-
-# Radio Dismuke
-http://74.208.197.50:8087
 
 # BBC streams
 http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p?s   #BBC Radio 1
@@ -35,8 +36,11 @@ http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4extra_mf_q?s  #BBC Radio 4 ex
 http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk          #BBC World service
 
 # PsyTrance
-http://81.88.36.42:8030/ 
+http://81.88.36.42:8030/  #psyradio * fm - psytrance
+http://81.88.36.44:8020/  #psyradio * fm - chillout
 
+# Elvis
+http://s2.fastcast4u.com:9246/
 
 ----------------------------------------------------------------------------------------
 # RPI wifi and bluetooth
@@ -126,7 +130,7 @@ sudo netstat -lntu
 
 
 ----------------------------------------------------------------------------------------
-# Audio:
+# Audio and Video:
 
 # Add usb audio
 sudo nano /etc/asound.conf 
@@ -147,11 +151,29 @@ mpg123 http://ice1.somafm.com/u80s-128-mp3
 # Mixer and volume control
 alsamixer -c 1
 
+# Audio detection
 out = `/usr/bin/arecord -D plughw:#{HWDEVICE},0 -d #{SAMPLE_DURATION} -f #{FORMAT} 2>/dev/null | /usr/bin/sox -t .wav - -n stat 2>&1`
 
 sudo arecord --device=hw:1,0 --format S16_LE -d 5 2>/dev/null | /usr/bin/sox -t .wav - -n stat
 
 sudo arecord --device=hw:1,0 --format S16_LE --rate 441000 -c1 sweep.wav
+
+# Video stream
+raspivid -fl -t 0 -w 480 -h 320 -o - | avconv -i - -c:v libx264 -profile baseline -an -strict -2 -f flv -s 640x480 -q 10 rtmp://192.168.1.106:8080/
+
+# Youtube downloader
+sudo curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
+sudo chmod a+rx /usr/local/bin/youtube-dl
+
+# Download entire playlist as mp3s
+youtube-dl --download-archive downloaded.txt --ignore-errors --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s" <url to playlist>
+
+# Extract sound from video using ffmpeg
+ffmpeg -i source_video.avi -vn -ar 44100 -ac 2 -ab 192k -f mp3 sound.mp3
+
+# Convert wav to mp3
+ffmpeg -i input.wav -vn -ar 44100 -ac 2 -ab 192k -f mp3 output.mp3
+
 ----------------------------------------------------------------------------------------
 #mysql command cheats
 
